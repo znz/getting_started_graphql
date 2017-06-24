@@ -19,5 +19,18 @@ const getVideoById = (id) => new Promise(resolve => {
   resolve(video)
 })
 
+const createVideo = ({ title }) => {
+  const maxId = Math.max.apply(null, videos.map(v => v.id))
+  const watched = false
+  const video = {
+    id: maxId + 1,
+    title,
+    watched,
+  }
+  videos.push(video)
+  return video
+}
+
 exports.getVideoById = getVideoById
 exports.getVideos = getVideos
+exports.createVideo = createVideo
