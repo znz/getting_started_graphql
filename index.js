@@ -10,6 +10,7 @@ const {
   GraphQLBoolean,
   GraphQLNonNull,
   GraphQLList,
+  GraphQLInputObjectType,
 } = require('graphql')
 const { getVideoById, getVideos, createVideo } = require('./data')
 
@@ -63,6 +64,17 @@ const queryType = new GraphQLObjectType({
   }
 })
 
+const videoInputType = new GraphQLInputObjectType({
+  name: 'VideoInputType',
+  description: 'video input type',
+  fields: {
+    title: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'title of video',
+    },
+  }
+})
+
 const mutationType = new GraphQLObjectType({
   name: 'Mutation',
   description: 'Mutation type',
@@ -70,13 +82,12 @@ const mutationType = new GraphQLObjectType({
     createVideo: {
       type: videoType,
       args: {
-        title: {
-          type: new GraphQLNonNull(GraphQLString),
-          description: 'title of video',
+        video: {
+          type: new GraphQLNonNull(videoInputType)
         },
       },
       resolve: (_, args) => {
-        return createVideo(args)
+        return createVideo(args.video)
       }
     },
   },
