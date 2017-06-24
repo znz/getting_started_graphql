@@ -16,6 +16,13 @@ const { getVideoById, getVideos, createVideo } = require('./data')
 const PORT = process.env.PORT || 3000
 const server = express()
 
+/*
+video
+  id
+  title
+  watched
+*/
+
 const videoType = new GraphQLObjectType({
   name: 'Video',
   description: 'video',
@@ -49,7 +56,7 @@ const queryType = new GraphQLObjectType({
         id: {
           type: new GraphQLNonNull(GraphQLID),
           description: 'id of video',
-        },
+        }
       },
       resolve: (_, args) => getVideoById(args.id)
     }
@@ -80,29 +87,9 @@ const schema = new GraphQLSchema({
   mutation: mutationType,
 })
 
-const resolvers = {
-  video: () => ({
-    id: 1,
-    title: 'bar',
-    watched: true,
-  }),
-  videos: () => videos,
-}
-
-const query = `
-query myQuery {
-  videos {
-    id,
-    title,
-    watched,
-  }
-}
-`
-
 server.use('/graphql', graphqlHTTP({
   schema,
   graphiql: true,
-  rootValue: resolvers,
 }))
 
 server.listen(PORT, () => {
